@@ -9,10 +9,15 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(true);
 
   useEffect(() => {
-    fetchFlashcards();
-  }, []);
+    if (isAuthenticated) {
+      fetchFlashcards();
+    }
+  }, [isAuthenticated]);
 
   const fetchFlashcards = async () => {
     try {
@@ -22,6 +27,19 @@ function Dashboard() {
       console.error("Error fetching flashcards:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handlePasswordSubmit = () => {
+    if (password === 'admin') {
+      setIsAuthenticated(true);
+      setShowPasswordPrompt(false);
+    } else {
+      alert('Incorrect password');
     }
   };
 
@@ -91,84 +109,104 @@ function Dashboard() {
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
-          Flashcard Dashboard
-        </h1>
-        <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md mb-6">
-          <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Flashcard' : 'Add New Flashcard'}</h2>
-          <input
-            type="text"
-            name="question"
-            value={currentCard.question}
-            onChange={handleInputChange}
-            placeholder="Question"
-            className="border border-gray-300 p-3 mb-3 rounded w-full"
-          />
-          <textarea
-            name="answer"
-            value={currentCard.answer}
-            onChange={handleInputChange}
-            placeholder="Answer"
-            className="border border-gray-300 p-3 mb-4 rounded w-full"
-          />
-          {isEditing ? (
-            <div className="flex gap-4">
-              <button onClick={handleUpdateCard} className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
-                Update Card
-              </button>
-              <button onClick={handleNewCardClick} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
-                Add New Card
-              </button>
-            </div>
-          ) : (
-            <button onClick={handleAddCard} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
-              Add Card
+      {showPasswordPrompt ? (
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-lg font-semibold mb-4">Enter Password</h2>
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              placeholder="Password"
+              className="border border-gray-300 p-3 mb-4 rounded w-full"
+            />
+            <button onClick={handlePasswordSubmit} className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
+              Submit
             </button>
-          )}
+          </div>
         </div>
-        {loading ? (
-          <div className="text-center text-gray-500">Loading flashcards...</div>
-        ) : (
-          <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Flashcards List</h2>
-            {flashcards.length === 0 ? (
-              <p className="text-center text-gray-500">No flashcards available.</p>
-            ) : (
-              flashcards.map((card) => (
-                <div key={card.id} className="flex items-center justify-between border border-gray-300 p-4 mb-4 rounded-lg">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">{card.question}</h3>
-                    <p className="text-gray-600">{card.answer}</p>
-                  </div>
-                  <div className='w-[20%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
-                    <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-2 w-full rounded md:mr-2 hover:bg-yellow-600 transition">
-                      Edit
-                    </button>
-                    <button onClick={() => confirmDelete(card)} className="bg-red-500 text-white p-2 w-full rounded hover:bg-red-600 transition">
-                      Delete
-                    </button>
-                  </div>
+      ) : (
+        <>
+          <Navbar />
+          <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
+              Flashcard Dashboard
+            </h1>
+            <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md mb-6">
+              <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Flashcard' : 'Add New Flashcard'}</h2>
+              <input
+                type="text"
+                name="question"
+                value={currentCard.question}
+                onChange={handleInputChange}
+                placeholder="Question"
+                className="border border-gray-300 p-3 mb-3 rounded w-full"
+              />
+              <textarea
+                name="answer"
+                value={currentCard.answer}
+                onChange={handleInputChange}
+                placeholder="Answer"
+                className="border border-gray-300 p-3 mb-4 rounded w-full"
+              />
+              {isEditing ? (
+                <div className="flex gap-4">
+                  <button onClick={handleUpdateCard} className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
+                    Update Card
+                  </button>
+                  <button onClick={handleNewCardClick} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+                    Add New Card
+                  </button>
                 </div>
-              ))
+              ) : (
+                <button onClick={handleAddCard} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+                  Add Card
+                </button>
+              )}
+            </div>
+            {loading ? (
+              <div className="text-center text-gray-500">Loading flashcards...</div>
+            ) : (
+              <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold mb-4">Flashcards List</h2>
+                {flashcards.length === 0 ? (
+                  <p className="text-center text-gray-500">No flashcards available.</p>
+                ) : (
+                  flashcards.map((card) => (
+                    <div key={card.id} className="flex items-center justify-between border border-gray-300 p-4 mb-4 rounded-lg">
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-800">{card.question}</h3>
+                        <p className="text-gray-600">{card.answer}</p>
+                      </div>
+                      <div className='w-[20%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
+                        <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-2 w-full rounded md:mr-2 hover:bg-yellow-600 transition">
+                          Edit
+                        </button>
+                        <button onClick={() => confirmDelete(card)} className="bg-red-500 text-white p-2 w-full rounded hover:bg-red-600 transition">
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+            {showConfirmDelete && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                  <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this flashcard?</h3>
+                  <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-3 rounded mr-2 hover:bg-red-600 transition">
+                    Yes, Delete
+                  </button>
+                  <button onClick={handleCancelDelete} className="bg-gray-300 text-gray-700 p-3 rounded hover:bg-gray-400 transition">
+                    Cancel
+                  </button>
+                </div>
+              </div>
             )}
           </div>
-        )}
-        {showConfirmDelete && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this flashcard?</h3>
-              <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-3 rounded mr-2 hover:bg-red-600 transition">
-                Yes, Delete
-              </button>
-              <button onClick={handleCancelDelete} className="bg-gray-300 text-gray-700 p-3 rounded hover:bg-gray-400 transition">
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        </>
+      )}
     </>
   );
 }
