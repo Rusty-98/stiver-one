@@ -16,7 +16,7 @@ function Dashboard() {
 
   const fetchFlashcards = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/flashcards');
+      const response = await axios.get('https://stiver-one.onrender.com/flashcards');
       setFlashcards(response.data);
     } catch (error) {
       console.error("Error fetching flashcards:", error);
@@ -32,7 +32,7 @@ function Dashboard() {
 
   const handleAddCard = async () => {
     try {
-      await axios.post('http://localhost:3001/flashcards', currentCard);
+      await axios.post('https://stiver-one.onrender.com/flashcards', currentCard);
       fetchFlashcards();
       setCurrentCard({ id: '', question: '', answer: '' });
       setIsEditing(false);
@@ -48,7 +48,7 @@ function Dashboard() {
 
   const handleUpdateCard = async () => {
     try {
-      await axios.put(`http://localhost:3001/flashcards/${currentCard.id}`, currentCard);
+      await axios.put(`https://stiver-one.onrender.com/flashcards/${currentCard.id}`, currentCard);
       fetchFlashcards();
       setCurrentCard({ id: '', question: '', answer: '' });
       setIsEditing(false);
@@ -59,7 +59,7 @@ function Dashboard() {
 
   const handleDeleteCard = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/flashcards/${id}`);
+      await axios.delete(`https://stiver-one.onrender.com/flashcards/${id}`);
       fetchFlashcards();
     } catch (error) {
       console.error("Error deleting flashcard:", error);

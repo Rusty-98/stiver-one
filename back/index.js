@@ -15,6 +15,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type'],
 }));
 
+
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+
+
 // Get all flashcards
 app.get('/flashcards', (req, res) => {
     pool.query('SELECT * FROM flashcards', (err, results) => {
