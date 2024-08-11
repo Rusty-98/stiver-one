@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from './Navbar';
 
 function Dashboard() {
   const [flashcards, setFlashcards] = useState([]);
   const [currentCard, setCurrentCard] = useState({ id: '', question: '', answer: '' });
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState(null);
 
   useEffect(() => {
     fetchFlashcards();
   }, []);
 
   const fetchFlashcards = async () => {
-    const response = await axios.get('http://localhost:5000/api/flashcards');
-    setFlashcards(response.data);
+    try {
+      const response = await axios.get('http://localhost:3001/flashcards');
+      setFlashcards(response.data);
+    } catch (error) {
+      console.error("Error fetching flashcards:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -21,9 +31,14 @@ function Dashboard() {
   };
 
   const handleAddCard = async () => {
-    await axios.post('http://localhost:5000/api/flashcards', currentCard);
-    fetchFlashcards();
-    setCurrentCard({ id: '', question: '', answer: '' });
+    try {
+      await axios.post('http://localhost:3001/flashcards', currentCard);
+      fetchFlashcards();
+      setCurrentCard({ id: '', question: '', answer: '' });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error adding flashcard:", error);
+    }
   };
 
   const handleEditCard = (card) => {
@@ -32,61 +47,129 @@ function Dashboard() {
   };
 
   const handleUpdateCard = async () => {
-    await axios.put(`http://localhost:5000/api/flashcards/${currentCard.id}`, currentCard);
-    fetchFlashcards();
-    setCurrentCard({ id: '', question: '', answer: '' });
-    setIsEditing(false);
+    try {
+      await axios.put(`http://localhost:3001/flashcards/${currentCard.id}`, currentCard);
+      fetchFlashcards();
+      setCurrentCard({ id: '', question: '', answer: '' });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating flashcard:", error);
+    }
   };
 
   const handleDeleteCard = async (id) => {
-    await axios.delete(`http://localhost:5000/api/flashcards/${id}`);
-    fetchFlashcards();
+    try {
+      await axios.delete(`http://localhost:3001/flashcards/${id}`);
+      fetchFlashcards();
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+    }
+  };
+
+  const confirmDelete = (card) => {
+    setCardToDelete(card);
+    setShowConfirmDelete(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (cardToDelete) {
+      handleDeleteCard(cardToDelete.id);
+      setShowConfirmDelete(false);
+      setCardToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmDelete(false);
+    setCardToDelete(null);
+  };
+
+  const handleNewCardClick = () => {
+    setIsEditing(false);
+    setCurrentCard({ id: '', question: '', answer: '' });
   };
 
   return (
-    <div className="dashboard">
-      <h1 className="text-2xl font-bold mb-4">Flashcard Dashboard</h1>
-      <div className="form">
-        <input
-          type="text"
-          name="question"
-          value={currentCard.question}
-          onChange={handleInputChange}
-          placeholder="Question"
-          className="border p-2 mb-2"
-        />
-        <textarea
-          name="answer"
-          value={currentCard.answer}
-          onChange={handleInputChange}
-          placeholder="Answer"
-          className="border p-2 mb-2"
-        />
-        {isEditing ? (
-          <button onClick={handleUpdateCard} className="bg-blue-500 text-white p-2 rounded">
-            Update Card
-          </button>
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
+          Flashcard Dashboard
+        </h1>
+        <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Flashcard' : 'Add New Flashcard'}</h2>
+          <input
+            type="text"
+            name="question"
+            value={currentCard.question}
+            onChange={handleInputChange}
+            placeholder="Question"
+            className="border border-gray-300 p-3 mb-3 rounded w-full"
+          />
+          <textarea
+            name="answer"
+            value={currentCard.answer}
+            onChange={handleInputChange}
+            placeholder="Answer"
+            className="border border-gray-300 p-3 mb-4 rounded w-full"
+          />
+          {isEditing ? (
+            <div className="flex gap-4">
+              <button onClick={handleUpdateCard} className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
+                Update Card
+              </button>
+              <button onClick={handleNewCardClick} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+                Add New Card
+              </button>
+            </div>
+          ) : (
+            <button onClick={handleAddCard} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+              Add Card
+            </button>
+          )}
+        </div>
+        {loading ? (
+          <div className="text-center text-gray-500">Loading flashcards...</div>
         ) : (
-          <button onClick={handleAddCard} className="bg-green-500 text-white p-2 rounded">
-            Add Card
-          </button>
+          <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Flashcards List</h2>
+            {flashcards.length === 0 ? (
+              <p className="text-center text-gray-500">No flashcards available.</p>
+            ) : (
+              flashcards.map((card) => (
+                <div key={card.id} className="flex items-center justify-between border border-gray-300 p-4 mb-4 rounded-lg">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-800">{card.question}</h3>
+                    <p className="text-gray-600">{card.answer}</p>
+                  </div>
+                  <div className='w-[20%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
+                    <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-2 w-full rounded mr-2 hover:bg-yellow-600 transition">
+                      Edit
+                    </button>
+                    <button onClick={() => confirmDelete(card)} className="bg-red-500 text-white p-2 w-full rounded hover:bg-red-600 transition">
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+        {showConfirmDelete && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+              <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this flashcard?</h3>
+              <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-3 rounded mr-2 hover:bg-red-600 transition">
+                Yes, Delete
+              </button>
+              <button onClick={handleCancelDelete} className="bg-gray-300 text-gray-700 p-3 rounded hover:bg-gray-400 transition">
+                Cancel
+              </button>
+            </div>
+          </div>
         )}
       </div>
-      <div className="flashcard-list mt-4">
-        {flashcards.map((card) => (
-          <div key={card.id} className="flashcard border p-4 mb-2 rounded">
-            <h3 className="text-lg font-bold">{card.question}</h3>
-            <p>{card.answer}</p>
-            <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-1 rounded mr-2">
-              Edit
-            </button>
-            <button onClick={() => handleDeleteCard(card.id)} className="bg-red-500 text-white p-1 rounded">
-              Delete
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -1,20 +1,53 @@
-import React from 'react';
-import flashcards from './Data';
+import React, { useState, useEffect } from 'react';
 import CardCarousel from './component/CardCarousel';
 import Navbar from './component/Navbar';
+import fetchFlashcards from './Data.js';
 
 function App() {
+  const [flashcards, setFlashcards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const getFlashcards = async () => {
+      try {
+        const data = await fetchFlashcards(); // Fetch data from the API
+        setFlashcards(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch flashcards');
+        setLoading(false);
+      }
+    };
+
+    getFlashcards();
+  }, []);
+
+  if (loading) return (
+    <>
+      <Navbar />
+      <div className="App min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
+          Flashcard Learning
+        </h1>
+        <div className='w-full overflow-hidden'>
+          Loading...
+        </div>
+      </div>
+    </>
+  );;
+  if (error) return <p>{error}</p>;
+
   return (
     <>
       <Navbar />
-      <div className="App min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 flex flex-col items-center">
+      <div className="App min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
         <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
-          Flashcard Learning Tool
+          Flashcard Learning
         </h1>
         <div className='w-full overflow-hidden'>
-          <CardCarousel flashcards={flashcards} />
+          <CardCarousel flashcards={flashcards} /> {/* Pass fetched data to CardCarousel */}
         </div>
-        
       </div>
     </>
   );
