@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import { register } from "swiper/element/bundle";
 import "swiper/css/effect-cards";
 import { EffectCards, Navigation } from "swiper/modules";
-import Card from './card';
+import Card from './Card.jsx';
 
 register();
 
