@@ -178,7 +178,7 @@ function Dashboard() {
                         <h3 className="text-lg font-medium text-gray-800">{card.question}</h3>
                         <p className="text-gray-600">{card.answer}</p>
                       </div>
-                      <div className='w-[20%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
+                      <div className='w-[24%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
                         <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-2 w-full rounded md:mr-2 hover:bg-yellow-600 transition">
                           Edit
                         </button>

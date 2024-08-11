@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar{
+  display: none;
+}
+
 /* Add this CSS to your card.css or a global stylesheet */
 .card-container {
     display: flex;
