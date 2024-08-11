@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import CardCarousel from './component/CardCarousel';
 import Navbar from './component/Navbar';
 import fetchFlashcards from './Data.js';
@@ -23,6 +23,11 @@ function App() {
     getFlashcards();
   }, []);
 
+  // Memoize the CardCarousel to prevent unnecessary re-renders
+  const memoizedCardCarousel = useMemo(() => {
+    return <CardCarousel flashcards={flashcards} />;
+  }, [flashcards]);
+
   if (loading) return (
     <>
       <Navbar />
@@ -35,7 +40,8 @@ function App() {
         </div>
       </div>
     </>
-  );;
+  );
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -46,7 +52,7 @@ function App() {
           Flashcard Learning
         </h1>
         <div className='w-full overflow-hidden'>
-          <CardCarousel flashcards={flashcards} /> {/* Pass fetched data to CardCarousel */}
+          {memoizedCardCarousel}
         </div>
       </div>
     </>

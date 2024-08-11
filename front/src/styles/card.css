@@ -89,6 +89,14 @@
 .card-front h2,
 .card-back h2 {
     color: white;
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 600;
+}
+
+@media screen and (max-width: 768px) {
+    .card-front h2,
+    .card-back h2 {
+        font-size: 1.6rem;
+    }
+    
 }

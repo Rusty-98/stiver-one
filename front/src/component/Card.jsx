@@ -1,10 +1,10 @@
 import React from 'react';
-import '../styles/card.css'; // Import the CSS file for custom styles
+import '../styles/card.css';
 
 const Card = ({ flashcard, flipped }) => {
   return (
     <div
-      className={`my-10 h-[50vh] w-[70vw] border border-gray-600 rounded-[30px] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-105`}
+      className={`my-10 h-[50vh] w-[70vw] md:w-[50vw] border border-gray-600 rounded-[30px] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-105`}
     >
       <div className="card-container">
         <div
@@ -20,7 +20,7 @@ const Card = ({ flashcard, flipped }) => {
             style={{ backfaceVisibility: 'hidden' }}
           >
             <h2 className="text-left">Question:</h2>
-            <h2>{flashcard.question}</h2>
+            <h2 className=''>{flashcard.question}</h2>
           </div>
           <div
             className="card-back flex flex-col items-start justify-start"

@@ -15,7 +15,7 @@ const CardCarousel = ({ flashcards }) => {
   const [flippedIndex, setFlippedIndex] = useState(null);
 
   const handleFlip = (index) => {
-    setFlippedIndex(flippedIndex === index ? null : index); // Toggle flip
+    setFlippedIndex(flippedIndex === index ? null : index);
   };
 
   const isMultipleImages = flashcards.length > 1;
@@ -62,9 +62,6 @@ const CardCarousel = ({ flashcards }) => {
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl py-2 px-4 rounded"
         >
           Reveal Answer
-        </button>
-        <button className="bg-green-500 hover:bg-green-600 text-white text-xl font-bold py-2 px-4 rounded">
-          Save
         </button>
       </div>
     </>
