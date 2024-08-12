@@ -3,12 +3,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { register } from "swiper/element/bundle";
+// import { register } from "swiper/element/bundle";
 import "swiper/css/effect-cards";
 import { EffectCards, Navigation } from "swiper/modules";
 import Card from './Card.jsx';
 
-register();
+// register();
 
 const CardCarousel = ({ flashcards }) => {
   const swiperRef = useRef(null);
@@ -22,14 +22,17 @@ const CardCarousel = ({ flashcards }) => {
 
   return (
     <>
-      <div style={{ width: "100%", display: "flex", justifyContent: "center", position: 'relative' }}>
+      <div style={{ width: "100%", display: "flex", justifyContent: "center", position: 'relative', backgroundColor: "transparent" }}>
         <Swiper
           ref={swiperRef}
           style={{
             height: "auto",
+            borderRadius: "30px",
             width: "100%",
             marginLeft: "auto",
             marginRight: "auto",
+            overflow: "hidden",
+            backgroundColor: "transparent",
           }}
           effect="cards"
           modules={[EffectCards, Navigation]}
@@ -43,7 +46,7 @@ const CardCarousel = ({ flashcards }) => {
           }}
         >
           {flashcards.map((card, index) => (
-            <SwiperSlide key={index} style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+            <SwiperSlide key={index} style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', overflow: 'hidden', backgroundColor: "transparent" }}>
               <Card
                 flashcard={card}
                 flipped={flippedIndex === index}

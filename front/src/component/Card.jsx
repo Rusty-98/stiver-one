@@ -4,7 +4,7 @@ import '../styles/card.css';
 const Card = ({ flashcard, flipped }) => {
   return (
     <div
-      className={`my-10 h-[50vh] w-[70vw] md:w-[50vw] border border-gray-600 rounded-[30px] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-105`}
+      className={`my-10 h-[50vh] w-[70vw] md:w-[50vw] border-2 border-black rounded-[30px] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-105`}
     >
       <div className="card-container">
         <div

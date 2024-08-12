@@ -35,7 +35,7 @@ function App() {
         <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
           Flashcard Learning
         </h1>
-        <div className='w-full overflow-hidden'>
+        <div className='w-full overflow-hidden flex items-center justify-center'>
           Loading...
         </div>
       </div>
