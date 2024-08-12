@@ -1,9 +1,10 @@
 import React from 'react';
 import '../styles/card.css';
 
-const Card = ({ flashcard, flipped }) => {
+const Card = ({ flashcard, flipped, onFlip }) => {
   return (
     <div
+      onClick={onFlip}
       className={`my-10 h-[50vh] w-[70vw] md:w-[50vw] border-2 border-black rounded-[30px] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-105`}
     >
       <div className="card-container">

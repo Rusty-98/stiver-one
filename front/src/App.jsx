@@ -23,7 +23,6 @@ function App() {
     getFlashcards();
   }, []);
 
-  // Memoize the CardCarousel to prevent unnecessary re-renders
   const memoizedCardCarousel = useMemo(() => {
     return <CardCarousel flashcards={flashcards} />;
   }, [flashcards]);

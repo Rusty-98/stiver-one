@@ -112,7 +112,7 @@ function Dashboard() {
       {showPasswordPrompt ? (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-lg font-semibold mb-4">Enter Password</h2>
+            <h2 className="text-lg font-semibold mb-4">Enter Password "admin" </h2>
             <input
               type="password"
               value={password}
@@ -129,7 +129,7 @@ function Dashboard() {
         <>
           <Navbar />
           <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 pt-5 md:pt-10 flex flex-col items-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-center text-white my-8 select-none">
               Flashcard Dashboard
             </h1>
             <div className="w-full max-w-4xl bg-white p-4 rounded-lg shadow-md mb-6">
@@ -151,15 +151,15 @@ function Dashboard() {
               />
               {isEditing ? (
                 <div className="flex gap-4">
-                  <button onClick={handleUpdateCard} className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
+                  <button onClick={handleUpdateCard} className="select-none bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition">
                     Update Card
                   </button>
-                  <button onClick={handleNewCardClick} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+                  <button onClick={handleNewCardClick} className="select-none bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
                     Add New Card
                   </button>
                 </div>
               ) : (
-                <button onClick={handleAddCard} className="bg-green-500 text-white p-3 rounded hover:bg-green-600 transition">
+                <button onClick={handleAddCard} className="bg-green-500 select-none text-white p-3 rounded hover:bg-green-600 transition">
                   Add Card
                 </button>
               )}
@@ -173,16 +173,30 @@ function Dashboard() {
                   <p className="text-center text-gray-500">No flashcards available.</p>
                 ) : (
                   flashcards.map((card) => (
-                    <div key={card.id} className="flex items-center justify-between border border-gray-300 p-4 mb-4 rounded-lg">
-                      <div>
-                        <h3 className="text-lg font-medium text-gray-800">{card.question}</h3>
-                        <p className="text-gray-600">{card.answer}</p>
+                    <div
+                      key={card.id}
+                      className="flex items-center justify-between border border-gray-300 p-4 mb-4 rounded-lg"
+                      style={{ minHeight: '80px' }}  // Ensuring consistent height
+                    >
+                      <div style={{ maxWidth: '60%' }}>
+                        <h3 className="text-lg font-medium text-gray-800 truncate">
+                          {card.question}
+                        </h3>
+                        <p className="text-gray-600 truncate">
+                          {card.answer}
+                        </p>
                       </div>
                       <div className='w-[24%] md:w-auto flex flex-col gap-1 md:gap-0 md:flex-row'>
-                        <button onClick={() => handleEditCard(card)} className="bg-yellow-500 text-white p-2 w-full rounded md:mr-2 hover:bg-yellow-600 transition">
+                        <button
+                          onClick={() => handleEditCard(card)}
+                          className="bg-yellow-500 text-white select-none p-2 w-full rounded md:mr-2 hover:bg-yellow-600 transition"
+                        >
                           Edit
                         </button>
-                        <button onClick={() => confirmDelete(card)} className="bg-red-500 text-white p-2 w-full rounded hover:bg-red-600 transition">
+                        <button
+                          onClick={() => confirmDelete(card)}
+                          className="bg-red-500 text-white p-2 w-full select-none rounded hover:bg-red-600 transition"
+                        >
                           Delete
                         </button>
                       </div>
@@ -195,10 +209,10 @@ function Dashboard() {
               <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg text-center">
                   <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this flashcard?</h3>
-                  <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-3 rounded mr-2 hover:bg-red-600 transition">
+                  <button onClick={handleConfirmDelete} className="bg-red-500 select-none text-white p-3 rounded mr-2 hover:bg-red-600 transition">
                     Yes, Delete
                   </button>
-                  <button onClick={handleCancelDelete} className="bg-gray-300 text-gray-700 p-3 rounded hover:bg-gray-400 transition">
+                  <button onClick={handleCancelDelete} className="bg-gray-300 select-none text-gray-700 p-3 rounded hover:bg-gray-400 transition">
                     Cancel
                   </button>
                 </div>
