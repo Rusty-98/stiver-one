@@ -8,9 +8,8 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// Configure CORS
 app.use(cors({
-    origin: process.env.FRONTEND_URL, 
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
 }));
@@ -33,7 +32,6 @@ app.get('/flashcards', (req, res) => {
 });
 
 // Add a new flashcard
-// Example route: Add a new flashcard
 app.post('/flashcards', (req, res) => {
     const newCard = req.body;
 
@@ -70,12 +68,12 @@ app.put('/flashcards/:id', (req, res) => {
     const cardId = req.params.id;
     const updatedCard = req.body;
 
-    // Validate the incoming data
+    
     if (!updatedCard.question || !updatedCard.answer) {
         return res.status(400).json({ error: 'Both question and answer are required' });
     }
 
-    // Update the flashcard in the database
+    
     pool.query('UPDATE flashcards SET ? WHERE id = ?', [updatedCard, cardId], (err) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -97,7 +95,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Graceful shutdown
+
 process.on('SIGINT', () => {
     pool.end((err) => {
         if (err) {
