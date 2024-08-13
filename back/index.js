@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Configure CORS
 app.use(cors({
-    origin: '*', // Adjust this based on your needs. For production, specify allowed origins.
+    origin: process.env.FRONTEND_URL, 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
 }));
